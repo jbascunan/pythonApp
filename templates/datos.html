@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js'></script>
+</head>
+<body>
+    <div>
+        <form method="POST" action="/datos">
+            <input type="date" name="fechaInicio" placeholder="ingresar fecha" value="{{fechaIni}}"/>
+            <input type="date" name="fechaFin" placeholder="ingresar fecha" value="{{fechaFin}}"/>
+            <button class="btn btn-primary">submit</button>
+        </form>
+    </div>
+{% if strError|length > 1 %}
+    <div class="alert alert-danger">
+        <strong>{{strError}}</strong>
+    </div>
+{% endif %}
+    <h1>Datos UF</h1>
+    <div style="max-height: 300px; overflow: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>valor</th>
+                    <th>fecha</th>
+                </tr>
+            <thead>
+            <tbody>
+            {% for item in datosUf %}
+                <tr>
+                    <td>{{item.Fecha}}</td>
+                    <td>{{item.Valor}}</td>
+                </tr>
+            {% endfor %}
+            <tbody>
+        </table>
+    </div>
+    <h3>Uf valor mínimo: {{minUf}}</h3>
+    <h3>Uf valor máximo: {{maxUf}}</h3>
+    <h3>Uf promedio: {{promedioUf}}</h3>
+    <div>
+    <h3>Gráfico UF</h3>
+
+    <!-- bar chart canvas element -->
+    <canvas id="myChart" width="600" height="400"></canvas>
+    </div>
+    <h1>Datos Dolar</h1>
+        <div style="max-height: 300px; overflow: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>fecha</th>
+                    <th>valor</th>
+                </tr>
+            <thead>
+            <tbody>
+            {% for item in datosDolar %}
+                <tr>
+                    <td>{{item.Fecha}}</td>
+                    <td>{{item.Valor}}</td>
+                </tr>
+            {% endfor %}
+            <tbody>
+        </table>
+    </div>
+    <h3>Dólar valor mínimo: {{minDolar}}</h3>
+    <h3>Dólar valor máximo: {{maxDolar}}</h3>
+    <h3>Dólar promedio: {{promedioDolar}}</h3>
+    <div>
+    <h3>Gráfico Dolar</h3>
+    <!-- bar chart canvas element -->
+    <canvas id="myChartDolar" width="600" height="400"></canvas>
+    </div>
+    <script>
+      // Global parameters:
+      // do not resize the chart canvas when its container does (keep at 600x400px)
+      Chart.defaults.global.responsive = false;
+
+      // define the chart data uf
+      var chartData = {
+        labels : [{% for item in labelsUf %}
+                   "{{item}}",
+                  {% endfor %}],
+        datasets : [{
+            label: '{{ legendUf }}',
+            fill: true,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#ff0000",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 2,
+            pointHitRadius: 10,
+            data : [{% for item in valuesUf %}
+                      {{item}},
+                    {% endfor %}],
+            spanGaps: false
+        }]
+      }
+
+      // get chart canvas
+      var ctx = document.getElementById("myChart").getContext("2d");
+
+      // create the chart using the chart canvas
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+      });
+
+      //dolar
+      // define the chart data uf
+      var chartDataDolar = {
+        labels : [{% for item in labelsDolar %}
+                   "{{item}}",
+                  {% endfor %}],
+        datasets : [{
+            label: '{{ legendDolar }}',
+            fill: true,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#ff0000",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 2,
+            pointHitRadius: 10,
+            data : [{% for item in valuesDolar %}
+                      {{item}},
+                    {% endfor %}],
+            spanGaps: false
+        }]
+      }
+
+      // get chart canvas
+      var ctx1 = document.getElementById("myChartDolar").getContext("2d");
+
+      // create the chart using the chart canvas
+      var myChartDolar = new Chart(ctx1, {
+        type: 'line',
+        data: chartDataDolar,
+      });
+    </script>
+</body>
+</html>
